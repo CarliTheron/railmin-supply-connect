@@ -25,11 +25,24 @@ const Auth = () => {
   const handleAuth = async (isLogin: boolean) => {
     try {
       setLoading(true);
+      console.log(`Attempting to ${isLogin ? 'sign in' : 'sign up'} with email:`, email);
+      
       const { error } = isLogin
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
+        ? await supabase.auth.signInWithPassword({ 
+            email: email.trim(),
+            password: password.trim()
+          })
+        : await supabase.auth.signUp({ 
+            email: email.trim(),
+            password: password.trim()
+          });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Auth error:', error);
+        throw error;
+      }
+
+      console.log(`${isLogin ? 'Sign in' : 'Sign up'} successful`);
 
       if (!isLogin) {
         toast({
@@ -40,9 +53,10 @@ const Auth = () => {
         navigate("/");
       }
     } catch (error: any) {
+      console.error('Caught error:', error);
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Authentication Error",
+        description: error.message || "An error occurred during authentication",
         variant: "destructive",
       });
     } finally {
@@ -81,6 +95,7 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
               />
             </div>
             <div className="flex flex-col space-y-2">
