@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 
 interface InventoryItem {
   id: string;
@@ -15,6 +14,10 @@ interface InventoryItem {
   status: "In Stock" | "Low Stock" | "Out of Stock";
   location: string;
   lastUpdated: string;
+  partNumber?: string;
+  description?: string;
+  totalCost?: number;
+  country?: string;
 }
 
 interface InventoryTableProps {
@@ -22,43 +25,24 @@ interface InventoryTableProps {
 }
 
 export function InventoryTable({ items }: InventoryTableProps) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "In Stock":
-        return "bg-green-100 text-green-800";
-      case "Low Stock":
-        return "bg-yellow-100 text-yellow-800";
-      case "Out of Stock":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
     <div className="rounded-md border border-industrial-200">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Quantity</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Last Updated</TableHead>
+            <TableHead>Part Number</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Total Cost</TableHead>
+            <TableHead>Country</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {items.map((item) => (
             <TableRow key={item.id} className="hover:bg-industrial-50">
-              <TableCell className="font-medium">{item.name}</TableCell>
-              <TableCell>{item.quantity}</TableCell>
-              <TableCell>
-                <Badge className={getStatusColor(item.status)}>
-                  {item.status}
-                </Badge>
-              </TableCell>
-              <TableCell>{item.location}</TableCell>
-              <TableCell>{item.lastUpdated}</TableCell>
+              <TableCell className="font-medium">{item.partNumber}</TableCell>
+              <TableCell>{item.description}</TableCell>
+              <TableCell>{item.totalCost}</TableCell>
+              <TableCell>{item.country}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -121,7 +121,7 @@ const Index = () => {
         <div className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
             <h2 className="mb-4 text-xl font-semibold text-industrial-800">
-              Inventory Overview
+              Parts Overview
             </h2>
             <InventoryTable items={mockInventoryData} />
           </div>
