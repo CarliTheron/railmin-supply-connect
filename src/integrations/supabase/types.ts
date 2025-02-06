@@ -13,17 +13,14 @@ export type Database = {
         Row: {
           itemcode: string
           itemdescription: string | null
-          unitcost: number | null
         }
         Insert: {
           itemcode: string
           itemdescription?: string | null
-          unitcost?: number | null
         }
         Update: {
           itemcode?: string
           itemdescription?: string | null
-          unitcost?: number | null
         }
         Relationships: []
       }
@@ -78,6 +75,30 @@ export type Database = {
           part_number?: string
           total_cost?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      wheelmotor: {
+        Row: {
+          created_at: string
+          Description: string | null
+          Item: number
+          MFG: string | null
+          "PN#": string | null
+        }
+        Insert: {
+          created_at?: string
+          Description?: string | null
+          Item?: number
+          MFG?: string | null
+          "PN#"?: string | null
+        }
+        Update: {
+          created_at?: string
+          Description?: string | null
+          Item?: number
+          MFG?: string | null
+          "PN#"?: string | null
         }
         Relationships: []
       }
