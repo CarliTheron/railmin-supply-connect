@@ -58,7 +58,7 @@ export type Database = {
           description: string | null
           id: string
           part_number: string
-          total_cost: number | null
+          total_cost: string | null
           updated_at: string
         }
         Insert: {
@@ -67,7 +67,7 @@ export type Database = {
           description?: string | null
           id?: string
           part_number: string
-          total_cost?: number | null
+          total_cost?: string | null
           updated_at?: string
         }
         Update: {
@@ -76,7 +76,7 @@ export type Database = {
           description?: string | null
           id?: string
           part_number?: string
-          total_cost?: number | null
+          total_cost?: string | null
           updated_at?: string
         }
         Relationships: []

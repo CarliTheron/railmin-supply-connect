@@ -26,7 +26,7 @@ interface InventoryItem {
   id: string;
   part_number: string;
   description: string | null;
-  total_cost: number | null;
+  total_cost: string | null;  // Changed to string to match DB type
   country: string | null;
 }
 
@@ -57,6 +57,12 @@ export function InventoryTable({ items }: InventoryTableProps) {
 
   const handleEdit = (item: InventoryItem) => {
     setEditItem(item);
+  };
+
+  const formatCost = (cost: string | null): string => {
+    if (!cost) return "0.00";
+    const numCost = parseFloat(cost);
+    return isNaN(numCost) ? "0.00" : numCost.toFixed(2);
   };
 
   const handleSave = async (updatedItem: InventoryItem) => {
@@ -133,7 +139,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.part_number}</TableCell>
                 <TableCell>{item.description}</TableCell>
-                <TableCell>{item.total_cost?.toFixed(2)}</TableCell>
+                <TableCell>${formatCost(item.total_cost)}</TableCell>
                 <TableCell>{item.country}</TableCell>
                 <TableCell>
                   <Dialog>
@@ -182,11 +188,11 @@ export function InventoryTable({ items }: InventoryTableProps) {
                           <Input
                             id="totalCost"
                             type="number"
-                            defaultValue={item.total_cost || 0}
+                            defaultValue={formatCost(item.total_cost)}
                             onChange={(e) =>
                               setEditItem(prev => ({
                                 ...prev!,
-                                total_cost: parseFloat(e.target.value)
+                                total_cost: e.target.value
                               }))
                             }
                           />
