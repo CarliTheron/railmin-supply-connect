@@ -20,13 +20,14 @@ import { Search, Edit } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface InventoryItem {
   id: string;
-  partNumber: string;
-  description: string;
-  totalCost: number;
-  country: string;
+  part_number: string;
+  description: string | null;
+  total_cost: number | null;
+  country: string | null;
 }
 
 interface InventoryTableProps {
@@ -46,8 +47,8 @@ export function InventoryTable({ items }: InventoryTableProps) {
   const filteredItems = items.filter((item) => {
     const matchesSearch =
       !searchTerm ||
-      item.partNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
+      item.part_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.description?.toLowerCase() || "").includes(searchTerm.toLowerCase());
     
     const matchesCountry = selectedCountry === "all" || item.country === selectedCountry;
 
@@ -58,14 +59,32 @@ export function InventoryTable({ items }: InventoryTableProps) {
     setEditItem(item);
   };
 
-  const handleSave = (updatedItem: InventoryItem) => {
-    // Here you would typically make an API call to update the item
-    console.log("Saving updated item:", updatedItem);
-    toast({
-      title: "Success",
-      description: "Item updated successfully",
-    });
-    setEditItem(null);
+  const handleSave = async (updatedItem: InventoryItem) => {
+    try {
+      const { error } = await supabase
+        .from('suppliers')
+        .update({
+          part_number: updatedItem.part_number,
+          description: updatedItem.description,
+          total_cost: updatedItem.total_cost,
+          country: updatedItem.country,
+        })
+        .eq('id', updatedItem.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Item updated successfully",
+      });
+      setEditItem(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -90,7 +109,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
           <SelectContent>
             <SelectItem value="all">All Countries</SelectItem>
             {uniqueCountries.map((country) => (
-              <SelectItem key={country} value={country}>
+              <SelectItem key={country} value={country || ""}>
                 {country}
               </SelectItem>
             ))}
@@ -112,9 +131,9 @@ export function InventoryTable({ items }: InventoryTableProps) {
           <TableBody>
             {filteredItems.map((item) => (
               <TableRow key={item.id}>
-                <TableCell className="font-medium">{item.partNumber}</TableCell>
+                <TableCell className="font-medium">{item.part_number}</TableCell>
                 <TableCell>{item.description}</TableCell>
-                <TableCell>{item.totalCost.toFixed(2)}</TableCell>
+                <TableCell>{item.total_cost?.toFixed(2)}</TableCell>
                 <TableCell>{item.country}</TableCell>
                 <TableCell>
                   <Dialog>
@@ -136,11 +155,11 @@ export function InventoryTable({ items }: InventoryTableProps) {
                           <Label htmlFor="partNumber">Part Number</Label>
                           <Input
                             id="partNumber"
-                            defaultValue={item.partNumber}
+                            defaultValue={item.part_number}
                             onChange={(e) =>
                               setEditItem(prev => ({
                                 ...prev!,
-                                partNumber: e.target.value
+                                part_number: e.target.value
                               }))
                             }
                           />
@@ -149,7 +168,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
                           <Label htmlFor="description">Description</Label>
                           <Input
                             id="description"
-                            defaultValue={item.description}
+                            defaultValue={item.description || ""}
                             onChange={(e) =>
                               setEditItem(prev => ({
                                 ...prev!,
@@ -163,11 +182,11 @@ export function InventoryTable({ items }: InventoryTableProps) {
                           <Input
                             id="totalCost"
                             type="number"
-                            defaultValue={item.totalCost}
+                            defaultValue={item.total_cost || 0}
                             onChange={(e) =>
                               setEditItem(prev => ({
                                 ...prev!,
-                                totalCost: parseFloat(e.target.value)
+                                total_cost: parseFloat(e.target.value)
                               }))
                             }
                           />
@@ -176,7 +195,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
                           <Label htmlFor="country">Country</Label>
                           <Input
                             id="country"
-                            defaultValue={item.country}
+                            defaultValue={item.country || ""}
                             onChange={(e) =>
                               setEditItem(prev => ({
                                 ...prev!,

@@ -51,6 +51,36 @@ export type Database = {
         }
         Relationships: []
       }
+      suppliers: {
+        Row: {
+          country: string | null
+          created_at: string
+          description: string | null
+          id: string
+          part_number: string
+          total_cost: number | null
+          updated_at: string
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          part_number: string
+          total_cost?: number | null
+          updated_at?: string
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          part_number?: string
+          total_cost?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

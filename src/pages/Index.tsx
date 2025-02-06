@@ -7,44 +7,17 @@ import { StatusOverview } from "@/components/StatusOverview";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from "@tanstack/react-query";
 
-const mockInventoryData = [
-  {
-    id: "1",
-    partNumber: "41C615376P1",
-    description: "Sensor, Turbo Charger",
-    totalCost: 1552.83,
-    country: "Tazara"
-  },
-  {
-    id: "2",
-    partNumber: "128X1637",
-    description: "Gasket 2Pc, Exhaust manifold",
-    totalCost: 14.00,
-    country: "Tazara"
-  },
-  {
-    id: "3",
-    partNumber: "128X1006-1",
-    description: "Gasket 2Pc to cylinder",
-    totalCost: 13.78,
-    country: "Tazara"
-  },
-  {
-    id: "4",
-    partNumber: "150 x 1221-1",
-    description: "Kit, Piston Rings (4 Rings)",
-    totalCost: 290.00,
-    country: "Tazara"
-  },
-  {
-    id: "5",
-    partNumber: "150x1047-3",
-    description: "Kit, Turbo installation",
-    totalCost: 848.03,
-    country: "Tazara"
-  }
-];
+const fetchSuppliers = async () => {
+  const { data, error } = await supabase
+    .from('suppliers')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data;
+};
 
 const mockStatusData = [
   {
@@ -72,6 +45,11 @@ const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const { data: suppliers, isLoading, error } = useQuery({
+    queryKey: ['suppliers'],
+    queryFn: fetchSuppliers,
+  });
+
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
@@ -84,6 +62,14 @@ const Index = () => {
       });
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading suppliers</div>;
+  }
 
   return (
     <div className="min-h-screen bg-industrial-50 p-6 animate-fade-in">
@@ -134,7 +120,7 @@ const Index = () => {
             <h2 className="mb-4 text-xl font-semibold text-industrial-800">
               Parts Overview
             </h2>
-            <InventoryTable items={mockInventoryData} />
+            <InventoryTable items={suppliers || []} />
           </div>
           <div>
             <StatusOverview items={mockStatusData} />
