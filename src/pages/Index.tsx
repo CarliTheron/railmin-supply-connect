@@ -11,28 +11,39 @@ import { useToast } from "@/components/ui/use-toast";
 const mockInventoryData = [
   {
     id: "1",
-    name: "Railway Track Segments",
-    quantity: 250,
-    status: "In Stock" as const,
-    location: "Warehouse A",
-    lastUpdated: "2024-04-10",
+    partNumber: "41C615376P1",
+    description: "Sensor, Turbo Charger",
+    totalCost: 1552.83,
+    country: "Tazara"
   },
   {
     id: "2",
-    name: "Mining Equipment Parts",
-    quantity: 15,
-    status: "Low Stock" as const,
-    location: "Warehouse B",
-    lastUpdated: "2024-04-09",
+    partNumber: "128X1637",
+    description: "Gasket 2Pc, Exhaust manifold",
+    totalCost: 14.00,
+    country: "Tazara"
   },
   {
     id: "3",
-    name: "Safety Equipment",
-    quantity: 0,
-    status: "Out of Stock" as const,
-    location: "Warehouse C",
-    lastUpdated: "2024-04-08",
+    partNumber: "128X1006-1",
+    description: "Gasket 2Pc to cylinder",
+    totalCost: 13.78,
+    country: "Tazara"
   },
+  {
+    id: "4",
+    partNumber: "150 x 1221-1",
+    description: "Kit, Piston Rings (4 Rings)",
+    totalCost: 290.00,
+    country: "Tazara"
+  },
+  {
+    id: "5",
+    partNumber: "150x1047-3",
+    description: "Kit, Turbo installation",
+    totalCost: 848.03,
+    country: "Tazara"
+  }
 ];
 
 const mockStatusData = [
