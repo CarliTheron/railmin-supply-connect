@@ -46,8 +46,8 @@ export function InventoryTable({ items }: InventoryTableProps) {
   const filteredItems = items.filter((item) => {
     const matchesSearch =
       !searchTerm ||
-      item.partNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      item.partNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCountry = !selectedCountry || item.country === selectedCountry;
 
@@ -90,7 +90,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
           <SelectContent>
             <SelectItem value="">All Countries</SelectItem>
             {uniqueCountries.map((country) => (
-              <SelectItem key={country} value={country || ""}>
+              <SelectItem key={country} value={country}>
                 {country}
               </SelectItem>
             ))}
@@ -114,7 +114,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.partNumber}</TableCell>
                 <TableCell>{item.description}</TableCell>
-                <TableCell>{item.totalCost?.toFixed(2)}</TableCell>
+                <TableCell>{item.totalCost.toFixed(2)}</TableCell>
                 <TableCell>{item.country}</TableCell>
                 <TableCell>
                   <Dialog>
