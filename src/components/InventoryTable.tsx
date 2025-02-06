@@ -35,7 +35,7 @@ interface InventoryTableProps {
 
 export function InventoryTable({ items }: InventoryTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string>("all");
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const { toast } = useToast();
 
@@ -49,7 +49,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
       item.partNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesCountry = !selectedCountry || item.country === selectedCountry;
+    const matchesCountry = selectedCountry === "all" || item.country === selectedCountry;
 
     return matchesSearch && matchesCountry;
   });
@@ -88,7 +88,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
             <SelectValue placeholder="Filter by country" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Countries</SelectItem>
+            <SelectItem value="all">All Countries</SelectItem>
             {uniqueCountries.map((country) => (
               <SelectItem key={country} value={country}>
                 {country}
