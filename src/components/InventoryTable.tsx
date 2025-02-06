@@ -23,15 +23,10 @@ import { useToast } from "@/hooks/use-toast";
 
 interface InventoryItem {
   id: string;
-  name: string;
-  quantity: number;
-  status: "In Stock" | "Low Stock" | "Out of Stock";
-  location: string;
-  lastUpdated: string;
-  partNumber?: string;
-  description?: string;
-  totalCost?: number;
-  country?: string;
+  partNumber: string;
+  description: string;
+  totalCost: number;
+  country: string;
 }
 
 interface InventoryTableProps {
