@@ -39,7 +39,7 @@ export function StatusOverview({ items: propItems }: StatusOverviewProps) {
       }
 
       console.log('Fetched user activity:', data);
-      return data;
+      return data as StatusItem[];
     },
     enabled: !!userEmail,
   });
