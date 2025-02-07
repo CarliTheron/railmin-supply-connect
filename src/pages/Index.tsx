@@ -11,27 +11,6 @@ import { TableSelector } from "@/components/TableSelector";
 import { fetchInventory, fetchSuppliers, fetchWheelMotor } from "@/utils/tableData";
 import { useState } from "react";
 
-const mockStatusData = [
-  {
-    id: "1",
-    name: "Main Railway Line",
-    status: "Operational" as const,
-    lastUpdate: "5 minutes ago",
-  },
-  {
-    id: "2",
-    name: "Mining Equipment",
-    status: "Warning" as const,
-    lastUpdate: "15 minutes ago",
-  },
-  {
-    id: "3",
-    name: "Supply Chain Network",
-    status: "Operational" as const,
-    lastUpdate: "1 hour ago",
-  },
-];
-
 const Index = () => {
   const { session } = useAuth();
   const navigate = useNavigate();
@@ -137,7 +116,7 @@ const Index = () => {
             <InventoryTable items={getTableData()} />
           </div>
           <div>
-            <StatusOverview items={mockStatusData} />
+            <StatusOverview />
           </div>
         </div>
       </div>
