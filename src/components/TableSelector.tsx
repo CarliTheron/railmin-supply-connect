@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Truck, Box } from "lucide-react";
+import { Package, Box } from "lucide-react";
 
 interface TableSelectorProps {
   onTableChange: (table: 'suppliers' | 'inventory' | 'wheelmotor') => void;
@@ -18,10 +18,10 @@ export function TableSelector({ onTableChange, currentTable, metrics }: TableSel
         className="h-24 flex-col space-y-2"
         onClick={() => onTableChange('inventory')}
       >
-        <Truck className="h-5 w-5" />
+        <Package className="h-5 w-5" />
         <div className="space-y-1">
           <p className="text-2xl font-bold">{metrics.shipments}</p>
-          <p className="text-xs text-muted-foreground">Total Shipments</p>
+          <p className="text-xs text-muted-foreground">Inventory Items</p>
         </div>
       </Button>
       <Button

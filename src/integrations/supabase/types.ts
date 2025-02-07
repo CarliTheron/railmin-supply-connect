@@ -78,6 +78,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_activity: {
+        Row: {
+          description: string | null
+          id: number
+          last_update: string | null
+          status: string
+          table_name: string | null
+          user_email: string
+        }
+        Insert: {
+          description?: string | null
+          id?: number
+          last_update?: string | null
+          status: string
+          table_name?: string | null
+          user_email: string
+        }
+        Update: {
+          description?: string | null
+          id?: number
+          last_update?: string | null
+          status?: string
+          table_name?: string | null
+          user_email?: string
+        }
+        Relationships: []
+      }
       wheelmotor: {
         Row: {
           created_at: string
