@@ -20,16 +20,22 @@ interface StatusOverviewProps {
 
 export function StatusOverview({ items: propItems }: StatusOverviewProps) {
   const { session } = useAuth();
-  const userEmail = session?.user?.email;
+  const currentUserEmail = session?.user?.email;
 
   const { data: activityItems, isLoading } = useQuery({
-    queryKey: ['user-activity', userEmail],
+    queryKey: ['user-activity', currentUserEmail],
     queryFn: async () => {
-      console.log('Fetching user activity for:', userEmail);
+      console.log('Fetching user activity for:', currentUserEmail);
+      
+      if (!currentUserEmail) {
+        console.log('No user email found in session');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('user_activity')
         .select('*')
-        .eq('user_email', userEmail || '')
+        .eq('user_email', currentUserEmail)
         .order('last_update', { ascending: false })
         .limit(5);
 
@@ -41,7 +47,7 @@ export function StatusOverview({ items: propItems }: StatusOverviewProps) {
       console.log('Fetched user activity:', data);
       return data as StatusItem[];
     },
-    enabled: !!userEmail,
+    enabled: !!currentUserEmail,
   });
 
   const getStatusColor = (status: string) => {
@@ -79,7 +85,7 @@ export function StatusOverview({ items: propItems }: StatusOverviewProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-industrial-800">
-          Recent Activity
+          Recent Activity for {currentUserEmail}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -104,7 +110,7 @@ export function StatusOverview({ items: propItems }: StatusOverviewProps) {
               </div>
             ))
           ) : (
-            <div className="text-sm text-gray-500">No recent activity</div>
+            <div className="text-sm text-gray-500">No recent activity for {currentUserEmail}</div>
           )}
         </div>
       </CardContent>
