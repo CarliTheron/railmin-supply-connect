@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,36 +23,23 @@ const Auth = () => {
     return null;
   }
 
-  const handleAuth = async (isLogin: boolean) => {
+  const handleSignIn = async () => {
     try {
       setLoading(true);
-      console.log(`Attempting to ${isLogin ? 'sign in' : 'sign up'} with email:`, email);
+      console.log('Attempting to sign in with email:', email);
       
-      const { error } = isLogin
-        ? await supabase.auth.signInWithPassword({ 
-            email: email.trim(),
-            password: password.trim()
-          })
-        : await supabase.auth.signUp({ 
-            email: email.trim(),
-            password: password.trim()
-          });
+      const { error } = await supabase.auth.signInWithPassword({ 
+        email: email.trim(),
+        password: password.trim()
+      });
 
       if (error) {
         console.error('Auth error:', error);
         throw error;
       }
 
-      console.log(`${isLogin ? 'Sign in' : 'Sign up'} successful`);
-
-      if (!isLogin) {
-        toast({
-          title: "Success",
-          description: "Please check your email for verification.",
-        });
-      } else {
-        navigate("/");
-      }
+      console.log('Sign in successful');
+      navigate("/");
     } catch (error: any) {
       console.error('Caught error:', error);
       toast({
@@ -70,7 +58,7 @@ const Auth = () => {
         <CardHeader>
           <CardTitle>Welcome to Supply Chain Dashboard</CardTitle>
           <CardDescription>
-            Sign in to your account or create a new one
+            Sign in to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -100,19 +88,11 @@ const Auth = () => {
             </div>
             <div className="flex flex-col space-y-2">
               <Button
-                onClick={() => handleAuth(true)}
+                onClick={handleSignIn}
                 disabled={loading}
                 className="w-full"
               >
                 {loading ? "Loading..." : "Sign In"}
-              </Button>
-              <Button
-                onClick={() => handleAuth(false)}
-                disabled={loading}
-                variant="outline"
-                className="w-full"
-              >
-                Create Account
               </Button>
             </div>
           </form>
