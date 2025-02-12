@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Package, Box } from "lucide-react";
 
@@ -21,7 +22,7 @@ export function TableSelector({ onTableChange, currentTable, metrics }: TableSel
         <Package className="h-5 w-5" />
         <div className="space-y-1">
           <p className="text-2xl font-bold">{metrics.shipments}</p>
-          <p className="text-xs text-muted-foreground">Inventory Items</p>
+          <p className="text-xs text-muted-foreground">Inventory</p>
         </div>
       </Button>
       <Button
@@ -32,7 +33,7 @@ export function TableSelector({ onTableChange, currentTable, metrics }: TableSel
         <Box className="h-5 w-5" />
         <div className="space-y-1">
           <p className="text-2xl font-bold">{metrics.orders}</p>
-          <p className="text-xs text-muted-foreground">Active Orders</p>
+          <p className="text-xs text-muted-foreground">Wheel Motor</p>
         </div>
       </Button>
     </div>
