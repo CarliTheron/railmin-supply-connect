@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   Table,
@@ -102,6 +103,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
   };
 
   const isInventoryTable = items.some((item) => "itemcode" in item);
+  const isWheelMotorTable = items.some((item) => "Item" in item);
 
   return (
     <div className="space-y-4">
@@ -120,15 +122,22 @@ export function InventoryTable({ items }: InventoryTableProps) {
             <TableRow>
               {isInventoryTable ? (
                 <>
-                  <TableHead>Item Code</TableHead>
+                  <TableHead>itemcode</TableHead>
+                  <TableHead>itemdescription</TableHead>
+                </>
+              ) : isWheelMotorTable ? (
+                <>
+                  <TableHead>Item</TableHead>
+                  <TableHead>PN#</TableHead>
                   <TableHead>Description</TableHead>
+                  <TableHead>MFG</TableHead>
                 </>
               ) : (
                 <>
-                  <TableHead>Part Number</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Total Cost</TableHead>
-                  <TableHead>Country</TableHead>
+                  <TableHead>part_number</TableHead>
+                  <TableHead>description</TableHead>
+                  <TableHead>total_cost</TableHead>
+                  <TableHead>country</TableHead>
                 </>
               )}
               <TableHead className="w-[100px]">Actions</TableHead>
@@ -141,6 +150,13 @@ export function InventoryTable({ items }: InventoryTableProps) {
                   <>
                     <TableCell className="font-medium">{item.itemcode}</TableCell>
                     <TableCell>{item.itemdescription}</TableCell>
+                  </>
+                ) : isWheelMotorTable ? (
+                  <>
+                    <TableCell className="font-medium">{item.id}</TableCell>
+                    <TableCell>{item.part_number}</TableCell>
+                    <TableCell>{item.description}</TableCell>
+                    <TableCell>{item.country}</TableCell>
                   </>
                 ) : (
                   <>
