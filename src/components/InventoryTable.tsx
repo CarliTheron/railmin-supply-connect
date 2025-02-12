@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Table,
@@ -122,15 +121,14 @@ export function InventoryTable({ items }: InventoryTableProps) {
             <TableRow>
               {isInventoryTable ? (
                 <>
-                  <TableHead>itemcode</TableHead>
-                  <TableHead>itemdescription</TableHead>
+                  <TableHead>Item Code</TableHead>
+                  <TableHead>Description</TableHead>
                 </>
               ) : isWheelMotorTable ? (
                 <>
-                  <TableHead>Item</TableHead>
+                  <TableHead>MFG</TableHead>
                   <TableHead>PN#</TableHead>
                   <TableHead>Description</TableHead>
-                  <TableHead>MFG</TableHead>
                 </>
               ) : (
                 <>
@@ -153,10 +151,9 @@ export function InventoryTable({ items }: InventoryTableProps) {
                   </>
                 ) : isWheelMotorTable ? (
                   <>
-                    <TableCell className="font-medium">{item.id}</TableCell>
+                    <TableCell className="font-medium">{item.country}</TableCell>
                     <TableCell>{item.part_number}</TableCell>
                     <TableCell>{item.description}</TableCell>
-                    <TableCell>{item.country}</TableCell>
                   </>
                 ) : (
                   <>
