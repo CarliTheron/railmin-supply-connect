@@ -88,15 +88,43 @@ export function InventoryTable({ items }: InventoryTableProps) {
   };
 
   const handleAdd = () => {
-    const newItem: InventoryItem = {
-      id: "",
-      part_number: "",
-      description: "",
-      total_cost: "",
-      country: "",
-      itemcode: "",
-      itemdescription: "",
-    };
+    const isInventoryTable = items.length > 0 && 'itemcode' in items[0];
+    const isWheelMotorTable = items.length > 0 && 'MFG' in items[0];
+
+    let newItem: InventoryItem;
+
+    if (isInventoryTable) {
+      newItem = {
+        id: "",
+        part_number: "",
+        description: null,
+        total_cost: null,
+        country: null,
+        itemcode: "",
+        itemdescription: "",
+      };
+    } else if (isWheelMotorTable) {
+      newItem = {
+        id: "",
+        part_number: "",
+        description: null,
+        total_cost: null,
+        country: null,
+        MFG: "",
+        "PN#": "",
+        Description: "",
+      };
+    } else {
+      // Suppliers table
+      newItem = {
+        id: "",
+        part_number: "",
+        description: "",
+        total_cost: "",
+        country: "",
+      };
+    }
+
     setEditItem(newItem);
   };
 
