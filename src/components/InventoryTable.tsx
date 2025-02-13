@@ -102,9 +102,6 @@ export function InventoryTable({ items }: InventoryTableProps) {
     }
   };
 
-  const isInventoryTable = items.some((item) => "itemcode" in item);
-  const isWheelMotorTable = items.some((item) => "Item" in item);
-
   return (
     <div className="space-y-4">
       <SearchBar
@@ -113,19 +110,19 @@ export function InventoryTable({ items }: InventoryTableProps) {
         selectedCountry={selectedCountry}
         onCountryChange={setSelectedCountry}
         uniqueCountries={uniqueCountries}
-        showCountryFilter={!isInventoryTable}
+        showCountryFilter={true}
       />
 
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
-              {isInventoryTable ? (
+              {"itemcode" in items[0] ? (
                 <>
                   <TableHead>Item Code</TableHead>
                   <TableHead>Description</TableHead>
                 </>
-              ) : isWheelMotorTable ? (
+              ) : "Item" in items[0] ? (
                 <>
                   <TableHead>MFG</TableHead>
                   <TableHead>PN#</TableHead>
@@ -145,12 +142,12 @@ export function InventoryTable({ items }: InventoryTableProps) {
           <TableBody>
             {filteredItems.map((item) => (
               <TableRow key={item.id}>
-                {isInventoryTable ? (
+                {"itemcode" in item ? (
                   <>
                     <TableCell className="font-medium">{item.itemcode}</TableCell>
                     <TableCell>{item.itemdescription}</TableCell>
                   </>
-                ) : isWheelMotorTable ? (
+                ) : "Item" in item ? (
                   <>
                     <TableCell className="font-medium">{item.country}</TableCell>
                     <TableCell>{item.part_number}</TableCell>
@@ -181,14 +178,16 @@ export function InventoryTable({ items }: InventoryTableProps) {
         </Table>
       </div>
 
-      <EditDialog
-        isOpen={!!editItem}
-        onClose={() => setEditItem(null)}
-        item={editItem}
-        onSave={handleSave}
-        onChange={handleEditFieldChange}
-        isInventoryTable={isInventoryTable}
-      />
+      {editItem && (
+        <EditDialog
+          isOpen={true}
+          onClose={() => setEditItem(null)}
+          item={editItem}
+          onSave={handleSave}
+          onChange={handleEditFieldChange}
+          isInventoryTable={"itemcode" in editItem}
+        />
+      )}
     </div>
   );
 }

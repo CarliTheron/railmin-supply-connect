@@ -109,21 +109,18 @@ export type Database = {
         Row: {
           created_at: string
           Description: string | null
-          Item: number
           MFG: string | null
           "PN#": string | null
         }
         Insert: {
           created_at?: string
           Description?: string | null
-          Item?: number
           MFG?: string | null
           "PN#"?: string | null
         }
         Update: {
           created_at?: string
           Description?: string | null
-          Item?: number
           MFG?: string | null
           "PN#"?: string | null
         }
