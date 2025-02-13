@@ -179,6 +179,10 @@ export function InventoryTable({ items }: InventoryTableProps) {
     }
   };
 
+  // Determine table type based on the first item's properties
+  const isInventoryTable = items.length > 0 && 'itemcode' in items[0];
+  const isWheelMotorTable = items.length > 0 && 'MFG' in items[0];
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -188,7 +192,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
           selectedCountry={selectedCountry}
           onCountryChange={setSelectedCountry}
           uniqueCountries={uniqueCountries}
-          showCountryFilter={true}
+          showCountryFilter={!isInventoryTable}
         />
         <Button onClick={handleAdd} className="ml-4">
           <Plus className="h-4 w-4 mr-2" />
@@ -200,12 +204,12 @@ export function InventoryTable({ items }: InventoryTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              {"itemcode" in items[0] ? (
+              {isInventoryTable ? (
                 <>
                   <TableHead>Item Code</TableHead>
                   <TableHead>Description</TableHead>
                 </>
-              ) : "MFG" in items[0] ? (
+              ) : isWheelMotorTable ? (
                 <>
                   <TableHead>MFG</TableHead>
                   <TableHead>PN#</TableHead>
@@ -213,10 +217,10 @@ export function InventoryTable({ items }: InventoryTableProps) {
                 </>
               ) : (
                 <>
-                  <TableHead>part_number</TableHead>
-                  <TableHead>description</TableHead>
-                  <TableHead>total_cost</TableHead>
-                  <TableHead>country</TableHead>
+                  <TableHead>Part Number</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Total Cost</TableHead>
+                  <TableHead>Country</TableHead>
                 </>
               )}
               <TableHead className="w-[120px]">Actions</TableHead>
@@ -225,16 +229,16 @@ export function InventoryTable({ items }: InventoryTableProps) {
           <TableBody>
             {filteredItems.map((item) => (
               <TableRow key={item.id}>
-                {"itemcode" in item ? (
+                {isInventoryTable ? (
                   <>
                     <TableCell className="font-medium">{item.itemcode}</TableCell>
                     <TableCell>{item.itemdescription}</TableCell>
                   </>
-                ) : "MFG" in item ? (
+                ) : isWheelMotorTable ? (
                   <>
                     <TableCell className="font-medium">{item.MFG}</TableCell>
-                    <TableCell>{item.part_number}</TableCell>
-                    <TableCell>{item.description}</TableCell>
+                    <TableCell>{item["PN#"]}</TableCell>
+                    <TableCell>{item.Description}</TableCell>
                   </>
                 ) : (
                   <>
@@ -278,7 +282,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
           item={editItem}
           onSave={handleSave}
           onChange={handleEditFieldChange}
-          isInventoryTable={"itemcode" in editItem}
+          isInventoryTable={isInventoryTable}
         />
       )}
     </div>

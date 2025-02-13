@@ -57,6 +57,10 @@ const Index = () => {
       case 'inventory':
         return inventory?.map(item => ({
           id: item.itemcode,
+          part_number: "",
+          description: null,
+          total_cost: null,
+          country: null,
           itemcode: item.itemcode,
           itemdescription: item.itemdescription,
         })) || [];
@@ -65,11 +69,11 @@ const Index = () => {
           id: item["PN#"] || "",
           part_number: item["PN#"] || "",
           description: item.Description || "",
+          total_cost: null,
+          country: null,
           MFG: item.MFG || "",
           "PN#": item["PN#"] || "",
           Description: item.Description || "",
-          total_cost: null,
-          country: item.MFG || null,
         })) || [];
       default:
         return suppliers || [];
