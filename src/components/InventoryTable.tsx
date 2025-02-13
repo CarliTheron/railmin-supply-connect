@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Edit, Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { SearchBar } from "./inventory/SearchBar";
@@ -49,6 +49,57 @@ export function InventoryTable({ items }: InventoryTableProps) {
     setEditItem(item);
   };
 
+  const handleDelete = async (item: InventoryItem) => {
+    try {
+      let error;
+      if ("itemcode" in item) {
+        const { error: invError } = await supabase
+          .from("inventory")
+          .delete()
+          .eq("itemcode", item.id);
+        error = invError;
+      } else if ("MFG" in item) {
+        const { error: wheelError } = await supabase
+          .from("wheelmotor")
+          .delete()
+          .eq("PN#", item.part_number);
+        error = wheelError;
+      } else {
+        const { error: suppError } = await supabase
+          .from("suppliers")
+          .delete()
+          .eq("id", item.id);
+        error = suppError;
+      }
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Item deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAdd = () => {
+    const newItem: InventoryItem = {
+      id: "",
+      part_number: "",
+      description: "",
+      total_cost: "",
+      country: "",
+      itemcode: "",
+      itemdescription: "",
+    };
+    setEditItem(newItem);
+  };
+
   const formatCost = (cost: string | null): string => {
     if (!cost) return "0.00";
     const numCost = parseFloat(cost);
@@ -59,32 +110,58 @@ export function InventoryTable({ items }: InventoryTableProps) {
     try {
       let error;
       if (updatedItem.itemcode) {
-        const { error: invError } = await supabase
-          .from("inventory")
-          .update({
-            itemcode: updatedItem.itemcode,
-            itemdescription: updatedItem.itemdescription,
-          })
-          .eq("itemcode", updatedItem.id);
-        error = invError;
+        if (!updatedItem.id) {
+          // Insert new inventory item
+          const { error: invError } = await supabase
+            .from("inventory")
+            .insert({
+              itemcode: updatedItem.itemcode,
+              itemdescription: updatedItem.itemdescription,
+            });
+          error = invError;
+        } else {
+          // Update existing inventory item
+          const { error: invError } = await supabase
+            .from("inventory")
+            .update({
+              itemcode: updatedItem.itemcode,
+              itemdescription: updatedItem.itemdescription,
+            })
+            .eq("itemcode", updatedItem.id);
+          error = invError;
+        }
       } else {
-        const { error: suppError } = await supabase
-          .from("suppliers")
-          .update({
-            part_number: updatedItem.part_number,
-            description: updatedItem.description,
-            total_cost: updatedItem.total_cost,
-            country: updatedItem.country,
-          })
-          .eq("id", updatedItem.id);
-        error = suppError;
+        if (!updatedItem.id) {
+          // Insert new supplier item
+          const { error: suppError } = await supabase
+            .from("suppliers")
+            .insert({
+              part_number: updatedItem.part_number,
+              description: updatedItem.description,
+              total_cost: updatedItem.total_cost,
+              country: updatedItem.country,
+            });
+          error = suppError;
+        } else {
+          // Update existing supplier item
+          const { error: suppError } = await supabase
+            .from("suppliers")
+            .update({
+              part_number: updatedItem.part_number,
+              description: updatedItem.description,
+              total_cost: updatedItem.total_cost,
+              country: updatedItem.country,
+            })
+            .eq("id", updatedItem.id);
+          error = suppError;
+        }
       }
 
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: "Item updated successfully",
+        description: updatedItem.id ? "Item updated successfully" : "Item added successfully",
       });
       setEditItem(null);
     } catch (error: any) {
@@ -104,14 +181,20 @@ export function InventoryTable({ items }: InventoryTableProps) {
 
   return (
     <div className="space-y-4">
-      <SearchBar
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        selectedCountry={selectedCountry}
-        onCountryChange={setSelectedCountry}
-        uniqueCountries={uniqueCountries}
-        showCountryFilter={true}
-      />
+      <div className="flex justify-between items-center">
+        <SearchBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedCountry={selectedCountry}
+          onCountryChange={setSelectedCountry}
+          uniqueCountries={uniqueCountries}
+          showCountryFilter={true}
+        />
+        <Button onClick={handleAdd} className="ml-4">
+          <Plus className="h-4 w-4 mr-2" />
+          Add Item
+        </Button>
+      </div>
 
       <div className="rounded-md border">
         <Table>
@@ -122,7 +205,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
                   <TableHead>Item Code</TableHead>
                   <TableHead>Description</TableHead>
                 </>
-              ) : "Item" in items[0] ? (
+              ) : "MFG" in items[0] ? (
                 <>
                   <TableHead>MFG</TableHead>
                   <TableHead>PN#</TableHead>
@@ -136,7 +219,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
                   <TableHead>country</TableHead>
                 </>
               )}
-              <TableHead className="w-[100px]">Actions</TableHead>
+              <TableHead className="w-[120px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -147,9 +230,9 @@ export function InventoryTable({ items }: InventoryTableProps) {
                     <TableCell className="font-medium">{item.itemcode}</TableCell>
                     <TableCell>{item.itemdescription}</TableCell>
                   </>
-                ) : "Item" in item ? (
+                ) : "MFG" in item ? (
                   <>
-                    <TableCell className="font-medium">{item.country}</TableCell>
+                    <TableCell className="font-medium">{item.MFG}</TableCell>
                     <TableCell>{item.part_number}</TableCell>
                     <TableCell>{item.description}</TableCell>
                   </>
@@ -164,13 +247,23 @@ export function InventoryTable({ items }: InventoryTableProps) {
                   </>
                 )}
                 <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEdit(item)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEdit(item)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(item)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
