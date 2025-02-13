@@ -57,18 +57,19 @@ const Index = () => {
       case 'inventory':
         return inventory?.map(item => ({
           id: item.itemcode,
-          part_number: item.itemcode,
-          description: item.itemdescription,
-          total_cost: "0",
-          country: null
+          itemcode: item.itemcode,
+          itemdescription: item.itemdescription,
         })) || [];
       case 'wheelmotor':
         return wheelMotor?.map(item => ({
-          id: item.Item.toString(),
+          id: item["PN#"] || "",
           part_number: item["PN#"] || "",
           description: item.Description || "",
-          total_cost: "0",
-          country: item.MFG
+          MFG: item.MFG || "",
+          "PN#": item["PN#"] || "",
+          Description: item.Description || "",
+          total_cost: null,
+          country: item.MFG || null,
         })) || [];
       default:
         return suppliers || [];

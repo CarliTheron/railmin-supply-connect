@@ -1,3 +1,4 @@
+
 export interface InventoryItem {
   id: string;
   part_number: string;
@@ -6,4 +7,7 @@ export interface InventoryItem {
   country: string | null;
   itemcode?: string;
   itemdescription?: string | null;
+  MFG?: string | null;
+  "PN#"?: string | null;
+  Description?: string | null;
 }

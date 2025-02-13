@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 
 export const fetchSuppliers = async () => {
@@ -22,7 +23,8 @@ export const fetchInventory = async () => {
 export const fetchWheelMotor = async () => {
   const { data, error } = await supabase
     .from('wheelmotor')
-    .select('*');
+    .select('*')
+    .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data;
